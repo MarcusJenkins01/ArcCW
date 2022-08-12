@@ -302,10 +302,14 @@ function SWEP:GetViewModelPosition(pos, ang)
 
     local owner = self:GetOwner()
     if !IsValid(owner) or !owner:Alive() then return end
+	
+	local viewOffset = owner:GetViewOffset()
+	local currentViewOffset = owner:GetCurrentViewOffset()
+	
     local FT = scrunkly()
     local CT = CurTime()
     local TargetTick = (1 / FT) / 66.66
-    local cdelta = math.Clamp(math.ease.InOutSine((owner:GetViewOffset().z - owner:GetCurrentViewOffset().z) / (owner:GetViewOffset().z - owner:GetViewOffsetDucked().z)),0,1)
+    local cdelta = math.Clamp(math.ease.InOutSine((viewOffset.z - currentViewOffset.z) / (viewOffset.z - currentViewOffset.z)),0,1)
 
     if TargetTick < 1 then
         FT = FT * TargetTick
@@ -344,6 +348,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 
     local apos, aang = self:GetBuff_Override("Override_ActivePos", self.ActivePos), self:GetBuff_Override("Override_ActiveAng", self.ActiveAng)
     local cpos, cang = self:GetBuff("CrouchPos", true) or apos, self:GetBuff("CrouchAng", true) or aang
+	
     target.down = 1
     target.sway = 2
     target.bob = 2
@@ -698,6 +703,7 @@ function SWEP:GetViewModelPosition(pos, ang)
     stopwatch(true)
 
     lst = SysTime()
+	
     return pos, ang
 end
 

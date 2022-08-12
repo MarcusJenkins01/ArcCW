@@ -865,10 +865,13 @@ function SWEP:IsProne()
     end
 end
 
+function SWEP:OnHorse()
+	return self:GetOwner():GetNetworkedBool("mounted")
+end
+
 -- BarrelHitWall is known to cause viewmodel flickering on certain playermodels if called during VM position function (a270cc9)
 local hitwallcache
 function SWEP:BarrelHitWall()
-
     local len = self:GetBuff("BarrelLength")
     if len == 0 or !GetConVar("arccw_override_nearwall"):GetBool() then
         return 0
