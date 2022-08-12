@@ -873,22 +873,15 @@ end
 local hitwallcache
 function SWEP:BarrelHitWall()
     local len = self:GetBuff("BarrelLength")
-    if len == 0 or !GetConVar("arccw_override_nearwall"):GetBool() then
-        return 0
-    end
-
-    -- Never block barrel in VR
-    if vrmod and vrmod.IsPlayerInVR(self:GetOwner()) then
-        return 0
-    end
-
-    -- Don't block barrel in vehicle
-    if self:GetOwner():IsPlayer() and self:GetOwner():InVehicle() then
-        return 0
+    if len == 0 or !GetConVar("arccw_override_nearwall"):GetBool()
+            or (vrmod and vrmod.IsPlayerInVR(self:GetOwner()))
+            or (self:GetOwner():IsPlayer() and self:GetOwner():InVehicle()) then
+        hitwallcache = {0, CurTime()}
+		return 0
     end
 
     if !hitwallcache or hitwallcache[1] ~= CurTime() then
-
+		print("hi")
         local offset = self:GetBuff("BarrelOffsetHip")
 
         if self:GetState() == ArcCW.STATE_SIGHTS then
