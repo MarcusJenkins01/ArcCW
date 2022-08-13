@@ -1,5 +1,19 @@
 ArcCW.AttachmentBlacklistTable = ArcCW.AttachmentBlacklistTable or {}
 
+hook.Add("ArcCW_CanCustomize", "CanCustom", function(ply, wep)
+	return 1
+end)
+
+function ArcCW:GetCustomizeEnabled(ply, wep)
+	local canCustomize = hook.Run("ArcCW_CanCustomize", ply, wep)
+	
+	if canCustomize != nil then
+		return canCustomize
+	else
+		return GetConVar("arccw_enable_customization"):GetInt()
+	end
+end
+
 function ArcCW:PlayerCanAttach(ply, wep, attname, slot, detach)
     -- The global variable takes priority over everything
     if !ArcCW.EnableCustomization then return false end
@@ -9,17 +23,32 @@ function ArcCW:PlayerCanAttach(ply, wep, attname, slot, detach)
 
     -- Allow hooks to block or force allow attachment usage
     local ret = hook.Run("ArcCW_PlayerCanAttach", ply, wep, attname, slot, detach)
-
-    if ret == nil and engine.ActiveGamemode() == "terrortown" then
+	local customizeEnabled = ArcCW:GetCustomizeEnabled(ply, wep)
+	
+	print(ret, customizeEnabled)
+	
+	if ret == nil and customizeEnabled != nil then
+		return customizeEnabled > 0
+	end
+	
+	if ret != nil and customizeEnabled == nil then
+		return ret
+	end
+	
+	if (ret != nil and !ret) or (customizeEnabled != nil and customizeEnabled <= 0) then
+		return false
+	end
+	
+	if ret == nil and customizeEnabled == nil and engine.ActiveGamemode() == "terrortown" then
         local mode = GetConVar("arccw_ttt_customizemode"):GetInt()
+		
         if mode == 1 and !ply.ArcCW_AllowCustomize then return false
         elseif mode == 2 and !ply.ArcCW_AllowCustomize and GetRoundState() == ROUND_ACTIVE then return false
         elseif mode == 3 and !ply.ArcCW_AllowCustomize and !ply:IsActiveTraitor() and !ply:IsActiveDetective() then return false end
-    elseif ret == nil and GetConVar("arccw_enable_customization"):GetInt() <= 0 then
-        return false
     end
 
-    return (ret == nil and true) or ret
+	print("true")
+    return true
 end
 
 function ArcCW:GetAttsForSlot(slot, wep, random)
@@ -428,14 +457,14 @@ net.Receive("arccw_asktodetach", function(len, ply)
 end)
 
 net.Receive("arccw_asktodrop", function(len, ply)
-
     local attid = net.ReadUInt(24)
     local att = ArcCW.AttachmentIDTable[attid]
+	local wpn = ply:GetActiveWeapon()
 
     if GetConVar("arccw_attinv_free"):GetBool() then return end
     if GetConVar("arccw_attinv_lockmode"):GetBool() then return end
-    if GetConVar("arccw_enable_customization"):GetInt() < 0 then return end
     if !GetConVar("arccw_enable_dropping"):GetBool() then return end
+	if ArcCW:GetCustomizeEnabled(ply, wpn) < 0 then return end
 
     if !att then return end
 

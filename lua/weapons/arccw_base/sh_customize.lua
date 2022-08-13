@@ -292,6 +292,7 @@ function SWEP:CreateCustomizeHUD()
     local buttonsize = ScreenScaleMulti(32)
     local fg_col = Color(255, 255, 255, 255)
     local bg_col = Color(0, 0, 0, 150)
+	local wep = LocalPlayer():GetActiveWeapon()
 
     if !self:IsValid() then return end
 
@@ -334,7 +335,7 @@ function SWEP:CreateCustomizeHUD()
             close = true
         end
 
-        if LocalPlayer():GetActiveWeapon() != ArcCW.InvHUD.ActiveWeapon then
+        if wep != ArcCW.InvHUD.ActiveWeapon then
             close = true
         end
 
@@ -1045,7 +1046,8 @@ function SWEP:CreateCustomizeHUD()
                             -- Drop attachment
                             if GetConVar("arccw_attinv_free"):GetBool() then return end
                             if GetConVar("arccw_attinv_lockmode"):GetBool() then return end
-                            if GetConVar("arccw_enable_customization"):GetInt() < 0 then return end
+							
+                            if ArcCW:GetCustomizeEnabled(ply, wep) < 0 then return end
                             if !GetConVar("arccw_enable_dropping"):GetBool() then return end
 
                             net.Start("arccw_asktodrop")

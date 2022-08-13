@@ -110,8 +110,7 @@ local function ArcCW_PlayerBindPress(ply, bind, pressed)
 		wep:ChangeFiremode()
 
         block = true
-    elseif bind == "inv" and !ply:KeyDown(IN_USE) and GetConVar("arccw_enable_customization"):GetInt() > -1 then
-
+    elseif bind == "inv" and !ply:KeyDown(IN_USE) and ArcCW:GetCustomizeEnabled(ply, wep) > -1 then
         local state = wep:GetState() != ArcCW.STATE_CUSTOMIZE
 
         SendNet("arccw_togglecustomize", state)

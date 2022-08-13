@@ -167,8 +167,8 @@ hook.Add("PlayerCanPickupWeapon", "ArcCW_PlayerCanPickupWeapon", function(ply, w
     if !ply:HasWeapon(wep:GetClass()) then return end
 
     if wep.Singleton then return false end
-
-    if !ArcCW.EnableCustomization or GetConVar("arccw_enable_customization"):GetInt() < 0 or GetConVar("arccw_attinv_free"):GetBool() then return end
+	
+    if !ArcCW.EnableCustomization or ArcCW:GetCustomizeEnabled(ply, wep) < 0 or GetConVar("arccw_attinv_free"):GetBool() then return end
 
     for _, i in pairs(wep.Attachments) do
         if i.Installed then

@@ -881,7 +881,6 @@ function SWEP:BarrelHitWall()
     end
 
     if !hitwallcache or hitwallcache[1] ~= CurTime() then
-		print("hi")
         local offset = self:GetBuff("BarrelOffsetHip")
 
         if self:GetState() == ArcCW.STATE_SIGHTS then
