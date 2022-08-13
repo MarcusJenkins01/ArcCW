@@ -298,7 +298,6 @@ function ArcCW:DoPenetration(tr, damage, bullet, penleft, physical, alreadypenne
 end
 
 function ArcCW:BulletCallback(att, tr, dmg, bullet, phys)
-
     local wep = phys and bullet.Weapon or bullet
     local hitpos, hitnormal = tr.HitPos, tr.HitNormal
     local trent = tr.Entity

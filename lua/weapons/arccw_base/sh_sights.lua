@@ -526,6 +526,14 @@ function SWEP:SetShouldHoldType()
     else
         ht = self:GetBuff_Override("Override_HoldtypeActive", self.HoldtypeActive)
     end
+	
+	if IsValid(self:GetOwner()) and self:GetOwner():InVehicle() then
+		if (ht == "revolver") then
+			ht = "pistol"
+		elseif (ht == "rpg") then
+			ht = "ar2"
+		end
+	end
 
     self:SetHoldType(ht)
 end

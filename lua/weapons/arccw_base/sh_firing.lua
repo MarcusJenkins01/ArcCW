@@ -226,6 +226,7 @@ function SWEP:PrimaryAttack()
     bullet.Tracer     = tracernum or 0
     bullet.TracerName = tracer
     bullet.Weapon     = self
+	-- bullet.IgnoreEntity = owner:GetVehicleFireTrace
     bullet.Callback = function(att, tr, dmg)
         ArcCW:BulletCallback(att, tr, dmg, self)
     end
