@@ -1,7 +1,7 @@
 ArcCW.AttachmentBlacklistTable = ArcCW.AttachmentBlacklistTable or {}
 
 hook.Add("ArcCW_CanCustomize", "CanCustom", function(ply, wep)
-	return 1
+	return -1
 end)
 
 function ArcCW:GetCustomizeEnabled(ply, wep)

@@ -110,14 +110,15 @@ local function ArcCW_PlayerBindPress(ply, bind, pressed)
 		wep:ChangeFiremode()
 
         block = true
-    elseif bind == "inv" and !ply:KeyDown(IN_USE) and ArcCW:GetCustomizeEnabled(ply, wep) > -1 then
+    elseif bind == "inv" and !ply:KeyDown(IN_USE) then
         local state = wep:GetState() != ArcCW.STATE_CUSTOMIZE
+		
+		if ArcCW:GetCustomizeEnabled(ply, wep) > -1 or !state then
+			SendNet("arccw_togglecustomize", state)
+			wep:ToggleCustomizeHUD(state)
 
-        SendNet("arccw_togglecustomize", state)
-
-        wep:ToggleCustomizeHUD(state)
-
-        block = true
+			block = true
+		end
     elseif bind == "ubgl" then
         DoUbgl(wep)
     elseif bind == "toggleatt" then
